@@ -1,0 +1,11 @@
+{
+  "name": "scratch-cloud-bridge",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "s-api4js": "latest"
+  }
+}
