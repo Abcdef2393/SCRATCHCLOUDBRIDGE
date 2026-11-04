@@ -1,5 +1,4 @@
 import express from 'express';
-
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -9,9 +8,8 @@ app.get('/', (req, res) => {
 });
 
 
-
-const readline = require('readline');
-const ScratchBridge = require('scratch3-bridge');
+import readline from 'readline';
+import ScratchBridge from 'scratch3-bridge';
 let msgrbridge = new ScratchBridge( process.env.SCRATCH_USER, process.env.SCRATCH_PASS, process.env.SCRATCH_PROJECT_ID);
 
 
