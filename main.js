@@ -31,14 +31,14 @@ Scratch.UserSession.create(
       // Listen for when variables change live on the Scratch servers
       cloud.on('set', (name, value) => {
         // Scratch cloud names usually come through with a special symbol: ☁ name
-        if (name.includes("☁ Request")) {
+        if (name.includes("Request")) {
           let receivedData = Number(value);
           console.log("Received:", receivedData);
           
           let responseData = receivedData * 2;
           
           // Set the response variable live on the servers
-          cloud.set("☁ Response", responseData);
+          cloud.set("Response", responseData);
           console.log("Sent:", responseData);
         }
       });
