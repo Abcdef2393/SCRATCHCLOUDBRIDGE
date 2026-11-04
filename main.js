@@ -1,4 +1,4 @@
-import { ScratchSession } from "scratch3-api";
+import Scratch from "scratch-api";
 import express from 'express';
 
 const app = express();
