@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "express": "^4.21.1",
-    "scratch-api": "^1.2.0"
+    "scratch3-api": "^1.2.6"
   }
 }
