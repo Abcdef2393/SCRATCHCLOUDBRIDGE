@@ -1,52 +1,59 @@
-import Scratch from 'scratch-api';
 import express from 'express';
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Setup a baseline route so Render knows the service is responsive
+
 app.get('/', (req, res) => {
   res.send('Server is up and running perfectly!');
 });
 
-// Start the live connection loop using the scratch-api callback structure
-Scratch.UserSession.create(
-  process.env.SCRATCH_USER,
-  process.env.SCRATCH_PASS,
-  (err, session) => {
-    if (err) {
-      return console.error("Login failed:", err);
-    }
+
+
+const readline = require('readline');
+const ScratchBridge = require('scratch3-bridge');
+let msgrbridge = new ScratchBridge( process.env.SCRATCH_USER, process.env.SCRATCH_PASS, process.env.SCRATCH_PROJECT_ID);
+
+
+msgrbridge.connect();
+let sender;
+
+msgrbridge.on('data', (msg,asender) =>{
+    console.log(`>(${asender}): ${msg}`);
+    sender = asender;
+    msgrbridge.send( sender, `String reversed on the server: ${msg.toString().split('').reverse().join('')}`  );
+});
+
+msgrbridge.on('connect', () => {
+    console.log( "Connected!! Sending your messages to Scratch:")
     
-    console.log("Logged in successfully to Scratch!");
-
-    // Connect directly to your live project
-    session.cloudSession(Number(process.env.SCRATCH_PROJECT_ID), (err, cloud) => {
-      if (err) {
-        return console.error("Cloud connection failed:", err);
-      }
-      
-      console.log("Connected to Scratch Cloud Variables!");
-
-      // Listen for when variables change live on the Scratch servers
-      cloud.on('set', (name, value) => {
-        // Scratch cloud names usually come through with a special symbol: ☁ name
-        if (name.includes("Request")) {
-          let receivedData = Number(value);
-          console.log("Received:", receivedData);
-          
-          let responseData = receivedData * 2;
-          
-          // Set the response variable live on the servers
-          cloud.set("Response", responseData);
-          console.log("Sent:", responseData);
-        }
-      });
+    const stdinput = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
     });
-  }
-);
 
-// Start Express listening on the proper Render host configuration
+    stdinput.on('line', (msg) => {
+        
+        msgrbridge.send( sender, `Message written on the server: ${msg}` );
+        if(msg === "quit"){
+            stdinput.close();
+        }
+    })
+
+})
+
+
+
+
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is listening on port ${PORT}`);
 });
+
+/*
+the environment variables (ignore for now)
+process.env.SCRATCH_USER,
+  process.env.SCRATCH_PASS,
+  process.env.SCRATCH_PROJECT_ID
+*/
+ 
