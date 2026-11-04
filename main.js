@@ -1,18 +1,19 @@
-import Scratch from "scratch-api";
+import Scratch from 'scratch-api';
 import express from 'express';
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
+// Setup a baseline route so Render knows the service is responsive
 app.get('/', (req, res) => {
   res.send('Server is up and running perfectly!');
 });
 
-// Start the live connection loop
-scratch.UserSession.create(
+// Start the live connection loop using the scratch-api callback structure
+Scratch.UserSession.create(
   process.env.SCRATCH_USER,
   process.env.SCRATCH_PASS,
-  async (err, session) => {
+  (err, session) => {
     if (err) {
       return console.error("Login failed:", err);
     }
@@ -27,8 +28,8 @@ scratch.UserSession.create(
       
       console.log("Connected to Scratch Cloud Variables!");
 
-      // Listen for when variables change
-      cloud.on('set', async (name, value) => {
+      // Listen for when variables change live on the Scratch servers
+      cloud.on('set', (name, value) => {
         // Scratch cloud names usually come through with a special symbol: ☁ name
         if (name.includes("Request")) {
           let receivedData = Number(value);
@@ -36,7 +37,7 @@ scratch.UserSession.create(
           
           let responseData = receivedData * 2;
           
-          // Set the variable live on the servers
+          // Set the response variable live on the servers
           cloud.set("Response", responseData);
           console.log("Sent:", responseData);
         }
@@ -45,6 +46,7 @@ scratch.UserSession.create(
   }
 );
 
+// Start Express listening on the proper Render host configuration
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is listening on port ${PORT}`);
 });
