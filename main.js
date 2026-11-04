@@ -1,4 +1,4 @@
-import scratch from 'scratch-api';
+import scratch from 'scratch3-api';
 import express from 'express';
 
 const app = express();
