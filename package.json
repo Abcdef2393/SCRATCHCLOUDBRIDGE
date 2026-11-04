@@ -1,12 +1,12 @@
 {
-  "name": "scratch-cloud-bridge",
+  "name": "scratch-cloud-server",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node main.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.21.1",
-    "s-api4js": "latest"
+    "scratch-api": "^1.2.0"
   }
 }
